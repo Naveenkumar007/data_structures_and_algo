@@ -1,34 +1,70 @@
 class Node
-	attr_accessor :value, :next_node
-	def initialize(value, next_node=nil)
+	attr_accessor :value, :next
+	def initialize(value)
 		@value = value
-    @next = next_node
-  end
+    	@next = nil
+    end
 end	
 
-class Linklist
-	def initialize(value)
-    @head = Node.new(value)
-  end
-  def add(value)
-  	current = @head
-  	while(!current.next_node.nil?)
-  		current = current.next_node
+# arr = [3,4,3,2,6,1,2,6]
+arr = [3,4]
+
+
+module LLMethod
+	def create(arr)
+    current = @head
+  	arr.each do | value |
+       if @head && current
+       	current.next = Node.new(value)
+        current = current.next 
+       else 
+        @head = Node.new(value)
+       	current = @head	  
+       end	
   	end	
-  	current.next_node = Node.new(value)
-  end	
+  end
   def display
   	current = @head
   	while(!current.nil?)
   		puts current.value
-  		current = current.next_node
+  		current = current.next
   	end	
-  end	
-
+  end 
 end
 
-ll = Linklist.new(8)
-ll.add(10)
-ll.add(20)
+module RRLinklist
+	def remove_redund_values
+    current = @head 
+    hashTable = {}
+    prev_node = current
+    while current
+    	if hashTable[current.value]
+        temp_node = current
+        current = prev_node
+    		current.next = temp_node.next
+    	else
+    		hashTable[current.value] = true
+    	end
+    	prev_node = current	
+      current = current.next;
+    end	
+  end
+end
 
+class Linklist
+	include LLMethod
+	include RRLinklist
+
+	def initialize()
+    @head = nil
+  end
+   
+end
+
+ll = Linklist.new
+ll.create(arr)
 ll.display()
+puts "##@@@@@@@@@@@@@@@@@@@@@@@@@@"
+ll.remove_redund_values();
+ll.display()
+
